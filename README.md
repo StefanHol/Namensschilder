@@ -32,7 +32,7 @@ Hiermit habe ich die Namensschilder für das [Python BarCamp](https://barcamps.e
 
 ## Eingangsdaten
 
-- Die Teilnehmerliste kann aus dem BarCamp Tool https://barcamps.eu/ , im Administrationebereich eruntergeladen werden.
+- Die Teilnehmerliste kann aus dem BarCamp Tool https://barcamps.eu/ , im Administrationebereich heruntergeladen werden.
     - ![Teilnehmer herunterladen](/img/Teinmehmer_herunterladen.png "Teilnehmer herunterladen"){width=250}
     - Diese Excel Datei kann direkt mit der Funktion `read_BarCamp_data_excel(datei_userdaten)` eingelesen werden und liefert das `df` mit 3 neuen Spalten zurück (firstname, lastname, orga) 
 
@@ -40,7 +40,7 @@ Hiermit habe ich die Namensschilder für das [Python BarCamp](https://barcamps.e
 
 ## Namensschilder befüllen und drucken
 
-- Mit dem Notebook [NamenschilderPythonCamp.ipynb] können nun die Badges mit INhalten gefüllt werden.
+- Mit dem Notebook [NamenschilderPythonCamp.ipynb] können nun die Badges mit Inhalten gefüllt werden.
 - Das oben bearbeitete Template muss der Variablen `TEMPLATE` zugewiesn werden.
 - Wenn alles vorbereitet ist, einfach durchlaufen lassen. und wahlweise die SVG/PDFs einzeln oder drucken.
     - je nach Vorlage, kann der automatische export von SVG -> PDF zu fehlerhaften ergebnissen führen. Dann entweder das SVG aus Incskape heraus drucken oder mit Incskape das PDF exportieren.
