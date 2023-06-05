@@ -1,27 +1,35 @@
 #!/usr/bin/env python
+"""Help Function to create BarCamp Badges."""
 
 import os
-from PyPDF2 import PdfWriter
+try:
+    from PyPDF2 import PdfWriter
+except ImportError:
+    print("Update your PyPDF2!")
+    from PyPDF2 import PdfFileWriter as PdfWriter
 import pandas as pd
 from svglib.svglib import svg2rlg
 from reportlab.graphics import renderPDF
 
 
-__version__ = "0.0.3"
+__version__ = "0.0.4"
 __author__ = "Stefan Holstein"
 __based_author__ = "Unknown"
 __repo__ = r"https://github.com/StefanHol/Namensschilder"
 
 
-class badges_helper():
-    def __init__(self, TEMPLATE='Namensschilder_PythonCamp (87x53).svg',
+class BadgesHelper():
+    """Tool to create and fill badges template with given data."""
+
+    def __init__(self, template='Namensschilder_PythonCamp (87x53).svg',
                  datei_userdaten=r"Demo_data.xls",
                  output_folder_name="output",
                  all_badges_output_name="Badges.pdf"):
-        self.PATTERN_VORNAME = 'firstname'
-        self.PATTERN_NACHNAME = 'lastname'
-        self.PATTERN_ORGA = "orga"
-        self.TEMPLATE = TEMPLATE
+        """Define your Badge information and source."""
+        self.pattern_firstname = 'firstname'  # requiered
+        self.pattern_lastname = 'lastname'  # requiered
+        self.pattern_orga = "orga"  # requiered
+        self.template = template
         # # csv eingabe datei
         self.datei_userdaten = datei_userdaten
         # # Ausgabe Ordner
@@ -29,14 +37,16 @@ class badges_helper():
         # alle badges zusammengefasst.
         self.all_badges_output_name = all_badges_output_name
 
-    def load_template(self, TEMPLATE=None):
-        if TEMPLATE is None:
-            TEMPLATE = self.TEMPLATE
-        with open(TEMPLATE) as f:
+    def load_template(self, template=None):
+        """Read SVG Inkscape template file."""
+        if template is None:
+            template = self.template
+        with open(template) as f:
             template = f.read()
         return template
 
     def save_output(self, data, num, folder_name=None):
+        """Store data to SVG Inkscape file."""
         if folder_name is None:
             folder_name = self.output_folder_name
         print(f"save: {num}")
@@ -46,12 +56,14 @@ class badges_helper():
             f.write(data)
 
     def check_create_folder(self, folder_name=None):
+        """Create folder if not exist."""
         if folder_name is None:
             folder_name = self.output_folder_name
         if not os.path.exists(os.getcwd() + os.path.sep + folder_name):
             os.makedirs(os.getcwd() + os.path.sep + folder_name, exist_ok=True)
 
     def convert_svg_to_pdf(self, folder, filename):
+        """Convert single CSV File into PDF."""
         try:
             drawing = svg2rlg(folder + os.path.sep + filename)
             base = os.path.splitext(filename)[0]
@@ -62,7 +74,8 @@ class badges_helper():
             print("Error in convert_svg_to_pdf" + f"{e}")
         return
 
-    def read_BarCamp_data_csv(self, datei_userdaten=None):
+    def read_bar_camp_data_csv(self, datei_userdaten=None):
+        """Read informations from CSV File."""
         if datei_userdaten is None:
             datei_userdaten = self.datei_userdaten
         df = pd.read_csv(datei_userdaten, sep=";", encoding='utf-8')
@@ -85,7 +98,8 @@ class badges_helper():
                 # print(index, row["Name"], " ")
         return df
 
-    def read_BarCamp_data_excel(self, datei_userdaten=None):
+    def read_bar_camp_data_excel(self, datei_userdaten=None):
+        """Read informations from Excel File."""
         if datei_userdaten is None:
             datei_userdaten = self.datei_userdaten
         df = pd.read_excel(datei_userdaten)
@@ -109,10 +123,18 @@ class badges_helper():
         return df
 
     def read_pdf_files_in_folder(self, pdf_folder=None):
-        '''Function return all PDFs-files in folder "pdf_folder".
-        input: FolderName with pdf files
-        return: array
-        '''
+        """Return all PDFs-files in given folder.
+
+        pdf_folder: FolderName with pdf files
+
+        Parameters
+        ----------
+        pdf_folder: str
+
+        Return
+        ----------
+        array
+        """
         if pdf_folder is None:
             pdf_folder = self.output_folder_name
         extention = ".pdf"
@@ -130,6 +152,12 @@ class badges_helper():
         return all_pdf_names
 
     def merge_all_pdfs_in_folder(self, pdf_folder, pdf_output_name):
+        """Compine all pfds in given Folder.
+
+        Return
+        ----------
+        str: Output file name
+        """
         all_pdf_names = self.read_pdf_files_in_folder(pdf_folder)
         try:
             merger = PdfWriter()
@@ -143,8 +171,7 @@ class badges_helper():
         return pdf_output_name
 
     def convert_all_svg_to_pdf(self, output_folder_name=None):
-        """Find all svg files in given folder and convert each file to pdf.
-        """
+        """Find all svg files in given folder and convert each file to pdf."""
         if output_folder_name is None:
             output_folder_name = self.output_folder_name
         ext = ('.svg')
@@ -163,8 +190,14 @@ class badges_helper():
         return [svg_filenames, pdf_filenames]
 
     def main(self, df, svg_template=None, enable_clear_template=True):
+        """Write all given data to new svg files into output folder.
+
+        Parameters
+        ----------
+        df: Dataframe with badge data
+        """
         if svg_template is None:
-            svg_template = self.TEMPLATE
+            svg_template = self.template
         current = template = self.load_template(svg_template)
         num = 1
         for index, row in df.iterrows():
@@ -172,32 +205,32 @@ class badges_helper():
             lastname = str(row['lastname'])
             orga = str(row['orga'])
             print(f"{lastname}, {firstname}, '{orga}'")
-            if ((not (self.PATTERN_NACHNAME in current)) and
-                    (not (self.PATTERN_VORNAME in current))):
+            if ((not (self.pattern_lastname in current)) and
+                    (not (self.pattern_firstname in current))):
                 self.save_output(current, index+1)
                 num += 1
                 current = template
-            current = current.replace(self.PATTERN_VORNAME, firstname, 1)
-            current = current.replace(self.PATTERN_NACHNAME, lastname, 1)
-            current = current.replace(self.PATTERN_ORGA, orga, 1)
+            current = current.replace(self.pattern_firstname, firstname, 1)
+            current = current.replace(self.pattern_lastname, lastname, 1)
+            current = current.replace(self.pattern_orga, orga, 1)
             # print(firstname, lastname, orga)
 
         if enable_clear_template:
             clear_template = True
             while clear_template:
-                if ((self.PATTERN_NACHNAME in current) and
-                        (self.PATTERN_VORNAME in current)):
+                if ((self.pattern_lastname in current) and
+                        (self.pattern_firstname in current)):
                     firstname = " "
                     lastname = " "
                     orga = " "
-                    current = current.replace(self.PATTERN_VORNAME,
+                    current = current.replace(self.pattern_firstname,
                                               firstname, 1)
-                    current = current.replace(self.PATTERN_NACHNAME,
+                    current = current.replace(self.pattern_lastname,
                                               lastname, 1)
-                    current = current.replace(self.PATTERN_ORGA,
+                    current = current.replace(self.pattern_orga,
                                               orga, 1)
-                if ((not (self.PATTERN_NACHNAME in current)) and
-                        (not (self.PATTERN_VORNAME in current))):
+                if ((not (self.pattern_lastname in current)) and
+                        (not (self.pattern_firstname in current))):
                     clear_template = False
                     break
         self.save_output(current, index+1+num)

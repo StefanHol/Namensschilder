@@ -1,5 +1,8 @@
 #!/usr/bin/env python
+"""Help Function to create empty Inkscape Template.
 
+Inkscape output will contain cutting and auxiliary lines.
+"""
 
 empty_page = """<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!-- Created with Inkscape (http://www.inkscape.org/) -->
@@ -51,6 +54,7 @@ class CalcInkscapeBadgeGrid():
 
     def __init__(self, badge_width=87, bagde_height=54,
                  tamplate_file_name="Template.svg"):
+        """Define badge size and template file."""
         self.badge_width = badge_width
         self.bagde_height = bagde_height
         self.tamplate_file_name = tamplate_file_name
