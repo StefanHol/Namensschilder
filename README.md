@@ -44,6 +44,49 @@ Hiermit habe ich die Namensschilder für das [Python BarCamp](https://barcamps.e
 - Das oben bearbeitete Template muss der Variablen `TEMPLATE` zugewiesn werden.
 - Wenn alles vorbereitet ist, einfach durchlaufen lassen. und wahlweise die SVG/PDFs einzeln oder drucken.
     - je nach Vorlage, kann der automatische export von SVG -> PDF zu fehlerhaften ergebnissen führen. Dann entweder das SVG aus Incskape heraus drucken oder mit Incskape das PDF exportieren.
+Code
+``` py
+#######################################################
+# Beispiel Daten
+#######################################################
+
+# # *.svg Template Daten
+template_file = 'Namensschilder_PythonCamp (87x53).svg'
+
+# # csv eingabe datei
+datei_userdaten = r"23-05-30-participants.xls"
+datei_userdaten = r"Demo_data.xls"
+
+# # Ausgabe Ordner
+output_folder_name = "output"
+# alle badges zusammengefasst.
+all_badges_output_name = "Badges.pdf"
+#######################################################
+
+# Erstelle Badges handler
+badges_handler = badges_helper(template = template_file,
+                       datei_userdaten = datei_userdaten,
+                       output_folder_name = output_folder_name,
+                       all_badges_output_name = all_badges_output_name)
+
+# Erstelle den Ausgabe-Ordner, falls er nicht existiert.
+#  -> output_folder_name
+badges_handler.check_create_folder()
+
+# Daten lesen und dem `df` zuweisen
+df = badges_handler.read_bar_camp_data_excel()
+
+# Daten in die finalen SVG Dateie übertragen. 
+badges_handler.main(df=df)
+
+# Umwandlung SVG -> PDF
+badges_handler.convert_all_svg_to_pdf()
+
+# Optional alle PDFs zusammenfassen.
+badges_handler.read_pdf_files_in_folder()
+badges_handler.merge_all_pdfs_in_folder(output_folder_name, all_badges_output_name)
+
+```
 - ![Filled Badges](/img/Filled_Badges_img.png "Filled Badges"){width=500}
 
 
