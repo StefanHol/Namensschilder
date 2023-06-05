@@ -46,6 +46,9 @@ Hiermit habe ich die Namensschilder für das [Python BarCamp](https://barcamps.e
     - je nach Vorlage, kann der automatische export von SVG -> PDF zu fehlerhaften ergebnissen führen. Dann entweder das SVG aus Incskape heraus drucken oder mit Incskape das PDF exportieren.
 Code
 ``` py
+# Import
+from badges_helper import BadgesHelper as badges_helper
+
 #######################################################
 # Beispiel Daten
 #######################################################
