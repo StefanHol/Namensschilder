@@ -14,6 +14,29 @@ Hiermit habe ich die Namensschilder für das [Python BarCamp](https://barcamps.e
     - Es wird ein Raster berechnet und mittig auf dem A4 Blatt angeordnet.
         - Horrizontales- / Vertikales Raster
     - Der Name der Ausgabedatei kann über `tamplate_dateiname` angepasst werden.
+    ```py
+    # Inkscape Template mit Schnittmarken erstellen
+
+    # Import
+    from calc_incskape_badge_grid import CalcInkscapeBadgeGrid as calc_grid_svg
+
+    # Badge größe
+    badge_width = 87
+    bagde_height = 54
+
+    # Badgegröße wird noch an den Dateinamen angehängt.
+    # 'Template.svg' => 'Template_(87-54).svg'
+    file_name_tamplate = "Template.svg"
+
+    # Hier werde default Werte s.o. übergeben.
+    cg = calc_grid_svg(badge_width=badge_width, 
+            bagde_height=bagde_height, 
+            tamplate_file_name=file_name_tamplate)
+    cg.main()
+
+    # Schreibe Incskape Datei mit Schnittmarken und Hilfslinien
+    cg.write_svg_data()
+    ```
     - ![Raw Template](/img/Template_img.png "Raw Template"){width=500}
 
 ---
@@ -44,52 +67,52 @@ Hiermit habe ich die Namensschilder für das [Python BarCamp](https://barcamps.e
 - Das oben bearbeitete Template muss der Variablen `TEMPLATE` zugewiesn werden.
 - Wenn alles vorbereitet ist, einfach durchlaufen lassen. und wahlweise die SVG/PDFs einzeln oder drucken.
     - je nach Vorlage, kann der automatische export von SVG -> PDF zu fehlerhaften ergebnissen führen. Dann entweder das SVG aus Incskape heraus drucken oder mit Incskape das PDF exportieren.
-Code
-``` py
-# Import
-from badges_helper import BadgesHelper as badges_helper
 
-#######################################################
-# Beispiel Daten
-#######################################################
+    ``` py
+    # Import
+    from badges_helper import BadgesHelper as badges_helper
 
-# # *.svg Template Daten
-template_file = 'Namensschilder_PythonCamp (87x53).svg'
+    #######################################################
+    # Beispiel Daten
+    #######################################################
 
-# # csv eingabe datei
-datei_userdaten = r"23-05-30-participants.xls"
-datei_userdaten = r"Demo_data.xls"
+    # # *.svg Template Daten
+    template_file = 'Namensschilder_PythonCamp (87x53).svg'
 
-# # Ausgabe Ordner
-output_folder_name = "output"
-# alle badges zusammengefasst.
-all_badges_output_name = "Badges.pdf"
-#######################################################
+    # # csv eingabe datei
+    datei_userdaten = r"23-05-30-participants.xls"
+    datei_userdaten = r"Demo_data.xls"
 
-# Erstelle Badges handler
-badges_handler = badges_helper(template = template_file,
-                       datei_userdaten = datei_userdaten,
-                       output_folder_name = output_folder_name,
-                       all_badges_output_name = all_badges_output_name)
+    # # Ausgabe Ordner
+    output_folder_name = "output"
+    # alle badges zusammengefasst.
+    all_badges_output_name = "Badges.pdf"
+    #######################################################
 
-# Erstelle den Ausgabe-Ordner, falls er nicht existiert.
-#  -> output_folder_name
-badges_handler.check_create_folder()
+    # Erstelle Badges handler
+    badges_handler = badges_helper(template = template_file,
+                        datei_userdaten = datei_userdaten,
+                        output_folder_name = output_folder_name,
+                        all_badges_output_name = all_badges_output_name)
 
-# Daten lesen und dem `df` zuweisen
-df = badges_handler.read_bar_camp_data_excel()
+    # Erstelle den Ausgabe-Ordner, falls er nicht existiert.
+    #  -> output_folder_name
+    badges_handler.check_create_folder()
 
-# Daten in die finalen SVG Dateie übertragen. 
-badges_handler.main(df=df)
+    # Daten lesen und dem `df` zuweisen
+    df = badges_handler.read_bar_camp_data_excel()
 
-# Umwandlung SVG -> PDF
-badges_handler.convert_all_svg_to_pdf()
+    # Daten in die finalen SVG Dateie übertragen. 
+    badges_handler.main(df=df)
 
-# Optional alle PDFs zusammenfassen.
-badges_handler.read_pdf_files_in_folder()
-badges_handler.merge_all_pdfs_in_folder(output_folder_name, all_badges_output_name)
+    # Umwandlung SVG -> PDF
+    badges_handler.convert_all_svg_to_pdf()
 
-```
+    # Optional alle PDFs zusammenfassen.
+    badges_handler.read_pdf_files_in_folder()
+    badges_handler.merge_all_pdfs_in_folder(output_folder_name, all_badges_output_name)
+
+    ```
 - ![Filled Badges](/img/Filled_Badges_img.png "Filled Badges"){width=500}
 
 
